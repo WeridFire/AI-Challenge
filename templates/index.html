@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Heart Disease Detection System</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary-color: #2c3e50;
+        --secondary-color: #3498db;
+        --success-color: #27ae60;
+        --warning-color: #f39c12;
+        --danger-color: #e74c3c;
+        --light-bg: #f8f9fa;
+      }
+
+      body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      .main-container {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        margin: 2rem auto;
+        overflow: hidden;
+      }
+
+      .header {
+        background: linear-gradient(
+          135deg,
+          var(--primary-color) 0%,
+          var(--secondary-color) 100%
+        );
+        color: white;
+        padding: 2rem;
+        text-align: center;
+      }
+
+      .form-section {
+        padding: 2rem;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-label {
+        font-weight: 600;
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+      }
+
+      .form-control,
+      .form-select {
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        padding: 0.75rem;
+        transition: all 0.3s ease;
+      }
+
+      .form-control:focus,
+      .form-select:focus {
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+      }
+
+      .btn-primary {
+        background: linear-gradient(
+          135deg,
+          var(--secondary-color) 0%,
+          #2980b9 100%
+        );
+        border: none;
+        padding: 0.75rem 2rem;
+        border-radius: 25px;
+        font-weight: 600;
+        transition: transform 0.3s ease;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(52, 152, 219, 0.3);
+      }
+
+      .info-tooltip {
+        color: var(--secondary-color);
+        cursor: pointer;
+        margin-left: 0.5rem;
+      }
+
+      .guidance-box {
+        background: var(--light-bg);
+        border-left: 4px solid var(--secondary-color);
+        padding: 1rem;
+        margin-top: 0.5rem;
+        border-radius: 0 8px 8px 0;
+        display: none;
+      }
+
+      .validation-feedback {
+        display: block;
+        margin-top: 0.25rem;
+        font-size: 0.875rem;
+      }
+
+      .valid-feedback {
+        color: var(--success-color);
+      }
+
+      .invalid-feedback {
+        color: var(--danger-color);
+      }
+
+      .warning-feedback {
+        color: var(--warning-color);
+      }
+
+      .progress-indicator {
+        background: #e9ecef;
+        height: 4px;
+        border-radius: 2px;
+        margin: 1rem 0;
+        overflow: hidden;
+      }
+
+      .progress-bar {
+        background: linear-gradient(
+          135deg,
+          var(--success-color) 0%,
+          #2ecc71 100%
+        );
+        height: 100%;
+        transition: width 0.3s ease;
+        border-radius: 2px;
+      }
+
+      .loading-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .loading-content {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      }
+
+      .spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid var(--secondary-color);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 1rem;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .section-divider {
+        border: none;
+        height: 2px;
+        background: linear-gradient(
+          135deg,
+          transparent 0%,
+          var(--secondary-color) 50%,
+          transparent 100%
+        );
+        margin: 2rem 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="main-container">
+        <div class="header">
+          <h1>
+            <i class="fas fa-heartbeat"></i> Heart Disease Detection System
+          </h1>
+          <p class="mb-0">AI-Powered Cardiovascular Risk Assessment</p>
+        </div>
+
+        <div class="form-section">
+          <form id="patientForm">
+            <div class="progress-indicator">
+              <div class="progress-bar" style="width: 0%"></div>
+            </div>
+
+            <!-- Basic Information -->
+            <h3 class="text-primary mb-3">
+              <i class="fas fa-user"></i> Basic Information
+            </h3>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="age" class="form-label">
+                    Age (years)
+                    <i
+                      class="fas fa-info-circle info-tooltip"
+                      data-field="age"
+                    ></i>
+                  </label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="age"
+                    name="age"
+                    min="1"
+                    max="120"
+                    required
+                  />
+                  <div class="guidance-box" id="age-guidance"></div>
+                  <div class="validation-feedback" id="age-feedback"></div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="sex" class="form-label">
+                    Biological Sex
+                    <i
+                      class="fas fa-info-circle info-tooltip"
+                      data-field="sex"
+                    ></i>
+                  </label>
+                  <select class="form-select" id="sex" name="sex" required>
+                    <option value="">Select...</option>
+                    <option value="0">Female</option>
+                    <option value="1">Male</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <hr class="section-divider" />
+
+            <!-- Cardiovascular Parameters -->
+            <h3 class="text-primary mb-3">
+              <i class="fas fa-heart"></i> Cardiovascular Parameters
+            </h3>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="resting_blood_pressure" class="form-label">
+                    Resting Blood Pressure (mmHg)
+                    <i
+                      class="fas fa-info-circle info-tooltip"
+                      data-field="resting_blood_pressure"
+                    ></i>
+                  </label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="resting_blood_pressure"
+                    name="resting_blood_pressure"
+                    min="80"
+                    max="200"
+                    required
+                  />
+                  <div
+                    class="guidance-box"
+                    id="resting_blood_pressure-guidance"
+                  ></div>
+                  <div
+                    class="validation-feedback"
+                    id="resting_blood_pressure-feedback"
+                  ></div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="cholesterol" class="form-label">
+                    Cholesterol (mg/dl)
+                    <i
+                      class="fas fa-info-circle info-tooltip"
+                      data-field="cholesterol"
+                    ></i>
+                  </label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="cholesterol"
+                    name="cholesterol"
+                    min="100"
+                    max="500"
+                    required
+                  />
+                  <div class="guidance-box" id="cholesterol-guidance"></div>
+                  <div
+                    class="validation-feedback"
+                    id="cholesterol-feedback"
+                  ></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="max_heart_rate" class="form-label">
+                    Maximum Heart Rate (bpm)
+                    <i
+                      class="fas fa-info-circle info-tooltip"
+                      data-field="max_heart_rate"
+                    ></i>
+                  </label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="max_heart_rate"
+                    name="max_heart_rate"
+                    min="60"
+                    max="220"
+                    required
+                  />
+                  <div class="guidance-box" id="max_heart_rate-guidance"></div>
+                  <div
+                    class="validation-feedback"
+                    id="max_heart_rate-feedback"
+                  ></div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="st_depression" class="form-label">
+                    ST Depression (oldpeak)
+                    <i
+                      class="fas fa-info-circle info-tooltip"
+                      data-field="st_depression"
+                    ></i>
+                  </label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="st_depression"
+                    name="st_depression"
+                    min="0"
+                    max="6.2"
+                    step="0.1"
+                    required
+                  />
+                  <div class="guidance-box" id="st_depression-guidance"></div>
+                  <div
+                    class="validation-feedback"
+                    id="st_depression-feedback"
+                  ></div>
+                </div>
+              </div>
+            </div>
+
+            <hr class="section-divider" />
+
+            <!-- Clinical Indicators -->
+            <h3 class="text-primary mb-3">
+              <i class="fas fa-stethoscope"></i> Clinical Indicators
+            </h3>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="chest_pain_type" class="form-label">
+                    Chest Pain Type
+                    <i
+                      class="fas fa-info-circle info-tooltip"
+                      data-field="chest_pain_type"
+                    ></i>
+                  </label>
+                  <select
+                    class="form-select"
+                    id="chest_pain_type"
+                    name="chest_pain_type"
+                    required
+                  >
+                    <option value="">Select...</option>
+                    <option value="1">Typical Angina</option>
+                    <option value="2">Atypical Angina</option>
+                    <option value="3">Non-Anginal Pain</option>
+                    <option value="4">Asymptomatic</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="resting_ecg" class="form-label">
+                    Resting ECG Results
+                    <i
+                      class="fas fa-info-circle info-tooltip"
+                      data-field="resting_ecg"
+                    ></i>
+                  </label>
+                  <select
+                    class="form-select"
+                    id="resting_ecg"
+                    name="resting_ecg"
+                    required
+                  >
+                    <option value="">Select...</option>
+                    <option value="0">Normal</option>
+                    <option value="1">ST-T Wave Abnormality</option>
+                    <option value="2">Left Ventricular Hypertrophy</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="fasting_blood_sugar" class="form-label">
+                    Fasting Blood Sugar > 120 mg/dl
+                    <i
+                      class="fas fa-info-circle info-tooltip"
+                      data-field="fasting_blood_sugar"
+                    ></i>
+                  </label>
+                  <select
+                    class="form-select"
+                    id="fasting_blood_sugar"
+                    name="fasting_blood_sugar"
+                    required
+                  >
+                    <option value="">Select...</option>
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="exercise_induced_angina" class="form-label">
+                    Exercise Induced Angina
+                    <i
+                      class="fas fa-info-circle info-tooltip"
+                      data-field="exercise_induced_angina"
+                    ></i>
+                  </label>
+                  <select
+                    class="form-select"
+                    id="exercise_induced_angina"
+                    name="exercise_induced_angina"
+                    required
+                  >
+                    <option value="">Select...</option>
+                    <option value="0">No</option>
+                    <option value="1">Yes</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="slope_peak_exercise" class="form-label">
+                    Peak Exercise ST Slope
+                    <i
+                      class="fas fa-info-circle info-tooltip"
+                      data-field="slope_peak_exercise"
+                    ></i>
+                  </label>
+                  <select
+                    class="form-select"
+                    id="slope_peak_exercise"
+                    name="slope_peak_exercise"
+                    required
+                  >
+                    <option value="">Select...</option>
+                    <option value="1">Upsloping</option>
+                    <option value="2">Flat</option>
+                    <option value="3">Downsloping</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <hr class="section-divider" />
+
+            <!-- Specialized Tests -->
+            <h3 class="text-primary mb-3">
+              <i class="fas fa-microscope"></i> Specialized Test Results
+            </h3>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="major_vessels" class="form-label">
+                    Major Vessels (Fluoroscopy)
+                    <i
+                      class="fas fa-info-circle info-tooltip"
+                      data-field="major_vessels"
+                    ></i>
+                  </label>
+                  <select
+                    class="form-select"
+                    id="major_vessels"
+                    name="major_vessels"
+                    required
+                  >
+                    <option value="">Select...</option>
+                    <option value="0">0 vessels</option>
+                    <option value="1">1 vessel</option>
+                    <option value="2">2 vessels</option>
+                    <option value="3">3 vessels</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="thalassemia" class="form-label">
+                    Thalassemia Test
+                    <i
+                      class="fas fa-info-circle info-tooltip"
+                      data-field="thalassemia"
+                    ></i>
+                  </label>
+                  <select
+                    class="form-select"
+                    id="thalassemia"
+                    name="thalassemia"
+                    required
+                  >
+                    <option value="">Select...</option>
+                    <option value="3">Normal</option>
+                    <option value="6">Fixed Defect</option>
+                    <option value="7">Reversible Defect</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="text-center mt-4">
+              <button type="submit" class="btn btn-primary btn-lg">
+                <i class="fas fa-chart-line"></i> Analyze Risk
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+      <div class="loading-content">
+        <div class="spinner"></div>
+        <h4>Analyzing Your Data...</h4>
+        <p>
+          Our AI system is processing your information to generate a
+          comprehensive risk assessment.
+        </p>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Form validation and interaction
+      class PatientFormHandler {
+        constructor() {
+          this.form = document.getElementById("patientForm");
+          this.progressBar = document.querySelector(".progress-bar");
+          this.setupEventListeners();
+          this.updateProgress();
+        }
+
+        setupEventListeners() {
+          // Form submission
+          this.form.addEventListener("submit", this.handleSubmit.bind(this));
+
+          // Real-time validation
+          const inputs = this.form.querySelectorAll("input, select");
+          inputs.forEach((input) => {
+            input.addEventListener("blur", () => this.validateField(input));
+            input.addEventListener("input", () => {
+              this.updateProgress();
+              if (input.type === "number") {
+                this.validateField(input);
+              }
+            });
+          });
+
+          // Info tooltips
+          document.querySelectorAll(".info-tooltip").forEach((tooltip) => {
+            tooltip.addEventListener("click", this.toggleGuidance.bind(this));
+          });
+        }
+
+        async validateField(input) {
+          if (!input.value) return;
+
+          try {
+            const response = await fetch("/validate_field", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                field_name: input.name,
+                value: input.value,
+              }),
+            });
+
+            const result = await response.json();
+            this.displayValidationFeedback(input, result);
+          } catch (error) {
+            console.error("Validation error:", error);
+          }
+        }
+
+        displayValidationFeedback(input, result) {
+          const feedbackElement = document.getElementById(
+            `${input.name}-feedback`
+          );
+          if (!feedbackElement) return;
+
+          input.classList.remove("is-valid", "is-invalid");
+          feedbackElement.className = "validation-feedback";
+
+          if (result.valid) {
+            input.classList.add("is-valid");
+            feedbackElement.classList.add("valid-feedback");
+            feedbackElement.textContent = "✓ " + result.message;
+          } else {
+            input.classList.add("is-invalid");
+            if (result.severity === "warning") {
+              feedbackElement.classList.add("warning-feedback");
+              feedbackElement.textContent = "⚠ " + result.message;
+            } else {
+              feedbackElement.classList.add("invalid-feedback");
+              feedbackElement.textContent = "✗ " + result.message;
+            }
+          }
+        }
+
+        async toggleGuidance(event) {
+          const field = event.target.dataset.field;
+          const guidanceBox = document.getElementById(`${field}-guidance`);
+
+          if (guidanceBox.style.display === "block") {
+            guidanceBox.style.display = "none";
+            return;
+          }
+
+          try {
+            const response = await fetch(`/get_guidance?field=${field}`);
+            const guidance = await response.json();
+
+            guidanceBox.innerHTML = `
+                        <h6><i class="fas fa-lightbulb"></i> ${
+                          guidance.description
+                        }</h6>
+                        <ul class="mb-2">
+                            ${guidance.tips
+                              .map((tip) => `<li>${tip}</li>`)
+                              .join("")}
+                        </ul>
+                        ${
+                          guidance.examples.length > 0
+                            ? `<small><strong>Examples:</strong> ${guidance.examples.join(
+                                ", "
+                              )}</small>`
+                            : ""
+                        }
+                    `;
+            guidanceBox.style.display = "block";
+          } catch (error) {
+            console.error("Error loading guidance:", error);
+          }
+        }
+
+        updateProgress() {
+          const inputs = this.form.querySelectorAll(
+            "input[required], select[required]"
+          );
+          const filledInputs = Array.from(inputs).filter(
+            (input) => input.value.trim() !== ""
+          );
+          const progress = (filledInputs.length / inputs.length) * 100;
+          this.progressBar.style.width = `${progress}%`;
+        }
+
+        async handleSubmit(event) {
+          event.preventDefault();
+
+          // Show loading overlay
+          document.getElementById("loadingOverlay").style.display = "flex";
+
+          try {
+            const formData = new FormData(this.form);
+            const response = await fetch("/collect_data", {
+              method: "POST",
+              body: formData,
+            });
+
+            const result = await response.json();
+
+            if (result.status === "success") {
+              // Redirect to analysis page or show results
+              window.location.href = `/analyze/${result.patient_id}`;
+            } else {
+              throw new Error(result.message);
+            }
+          } catch (error) {
+            console.error("Submission error:", error);
+            alert("Error submitting form: " + error.message);
+          } finally {
+            document.getElementById("loadingOverlay").style.display = "none";
+          }
+        }
+      }
+
+      // Initialize form handler when page loads
+      document.addEventListener("DOMContentLoaded", () => {
+        new PatientFormHandler();
+      });
+    </script>
+  </body>
+</html>
