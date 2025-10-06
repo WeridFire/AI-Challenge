@@ -135,11 +135,141 @@ def create_mock_report(patient_data, patient_id):
             ]
         },
         'visualizations': {
-            'risk_probabilities': '<div class="alert alert-info">Interactive charts will be available with full dependencies installed.</div>',
-            'risk_distribution': '<div class="alert alert-info">Visualization loading...</div>',
-            'factor_importance': '<div class="alert alert-info">Chart coming soon...</div>',
-            'patient_profile': '<div class="alert alert-info">Radar chart will load with plotly.</div>',
-            'confidence_risk': '<div class="alert alert-info">Scatter plot available in full version.</div>'
+            'risk_probabilities': '''
+            <div style="background: white; padding: 20px; border-radius: 10px;">
+                <h5>Disease Risk Probabilities</h5>
+                <div style="margin: 10px 0;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin: 8px 0;">
+                        <span>Coronary Artery Disease</span>
+                        <div style="flex: 1; margin: 0 10px; background: #e9ecef; height: 25px; border-radius: 12px; overflow: hidden;">
+                            <div style="width: 65%; height: 100%; background: #dc3545; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">65%</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin: 8px 0;">
+                        <span>Heart Attack Risk</span>
+                        <div style="flex: 1; margin: 0 10px; background: #e9ecef; height: 25px; border-radius: 12px; overflow: hidden;">
+                            <div style="width: 45%; height: 100%; background: #fd7e14; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">45%</div>
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin: 8px 0;">
+                        <span>Arrhythmia Risk</span>
+                        <div style="flex: 1; margin: 0 10px; background: #e9ecef; height: 25px; border-radius: 12px; overflow: hidden;">
+                            <div style="width: 25%; height: 100%; background: #198754; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">25%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            ''',
+            'risk_distribution': '''
+            <div style="background: white; padding: 20px; border-radius: 10px;">
+                <h5>Risk Level Distribution</h5>
+                <div style="display: flex; justify-content: center; align-items: center; height: 200px;">
+                    <div style="position: relative; width: 150px; height: 150px;">
+                        <svg width="150" height="150" style="transform: rotate(-90deg);">
+                            <circle cx="75" cy="75" r="60" fill="none" stroke="#e9ecef" stroke-width="20"/>
+                            <circle cx="75" cy="75" r="60" fill="none" stroke="#dc3545" stroke-width="20" 
+                                    stroke-dasharray="113" stroke-dashoffset="34" opacity="0.8"/>
+                            <circle cx="75" cy="75" r="60" fill="none" stroke="#fd7e14" stroke-width="20" 
+                                    stroke-dasharray="75" stroke-dashoffset="109" opacity="0.8"/>
+                            <circle cx="75" cy="75" r="60" fill="none" stroke="#198754" stroke-width="20" 
+                                    stroke-dasharray="38" stroke-dashoffset="184" opacity="0.8"/>
+                        </svg>
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+                            <div style="font-size: 24px; font-weight: bold;">3</div>
+                            <div style="font-size: 12px;">Risks</div>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 10px;">
+                    <span style="color: #dc3545;">●</span> High (1) &nbsp;
+                    <span style="color: #fd7e14;">●</span> Medium (1) &nbsp;
+                    <span style="color: #198754;">●</span> Low (1)
+                </div>
+            </div>
+            ''',
+            'factor_importance': '''
+            <div style="background: white; padding: 20px; border-radius: 10px;">
+                <h5>Factor Importance Heatmap</h5>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <tr>
+                        <th style="padding: 8px; text-align: left;"></th>
+                        <th style="padding: 8px; text-align: center; font-size: 12px;">Age</th>
+                        <th style="padding: 8px; text-align: center; font-size: 12px;">Cholesterol</th>
+                        <th style="padding: 8px; text-align: center; font-size: 12px;">Blood Pressure</th>
+                        <th style="padding: 8px; text-align: center; font-size: 12px;">Chest Pain</th>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; font-size: 12px;">CAD</td>
+                        <td style="padding: 8px; background: #ff6b6b; text-align: center; color: white;">0.30</td>
+                        <td style="padding: 8px; background: #ff8e53; text-align: center; color: white;">0.25</td>
+                        <td style="padding: 8px; background: #4ecdc4; text-align: center; color: white;">0.20</td>
+                        <td style="padding: 8px; background: #ff6b6b; text-align: center; color: white;">0.25</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; font-size: 12px;">Heart Attack</td>
+                        <td style="padding: 8px; background: #ff8e53; text-align: center; color: white;">0.25</td>
+                        <td style="padding: 8px; background: #ff6b6b; text-align: center; color: white;">0.30</td>
+                        <td style="padding: 8px; background: #ff6b6b; text-align: center; color: white;">0.30</td>
+                        <td style="padding: 8px; background: #95e1d3; text-align: center;">0.15</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; font-size: 12px;">Arrhythmia</td>
+                        <td style="padding: 8px; background: #95e1d3; text-align: center;">0.15</td>
+                        <td style="padding: 8px; background: #95e1d3; text-align: center;">0.10</td>
+                        <td style="padding: 8px; background: #95e1d3; text-align: center;">0.15</td>
+                        <td style="padding: 8px; background: #4ecdc4; text-align: center; color: white;">0.20</td>
+                    </tr>
+                </table>
+            </div>
+            ''',
+            'patient_profile': '''
+            <div style="background: white; padding: 20px; border-radius: 10px;">
+                <h5>Patient Risk Profile</h5>
+                <div style="display: flex; justify-content: center; align-items: center; height: 200px;">
+                    <svg width="200" height="200">
+                        <defs>
+                            <polygon id="pentagon" points="100,20 180,70 145,150 55,150 20,70" 
+                                     fill="rgba(52, 152, 219, 0.3)" stroke="#3498db" stroke-width="2"/>
+                        </defs>
+                        <!-- Grid lines -->
+                        <polygon points="100,40 160,80 135,140 65,140 40,80" fill="none" stroke="#e9ecef" stroke-width="1"/>
+                        <polygon points="100,60 140,90 125,130 75,130 60,90" fill="none" stroke="#e9ecef" stroke-width="1"/>
+                        <!-- Data -->
+                        <polygon points="100,45 150,85 130,135 70,135 50,85" 
+                                 fill="rgba(231, 76, 60, 0.4)" stroke="#e74c3c" stroke-width="2"/>
+                        <!-- Labels -->
+                        <text x="100" y="15" text-anchor="middle" font-size="10">Age Risk</text>
+                        <text x="185" y="75" text-anchor="start" font-size="10">BP Risk</text>
+                        <text x="150" y="165" text-anchor="middle" font-size="10">Cholesterol</text>
+                        <text x="50" y="165" text-anchor="middle" font-size="10">Exercise</text>
+                        <text x="15" y="75" text-anchor="end" font-size="10">ECG Risk</text>
+                    </svg>
+                </div>
+            </div>
+            ''',
+            'confidence_risk': '''
+            <div style="background: white; padding: 20px; border-radius: 10px;">
+                <h5>Model Confidence vs Risk</h5>
+                <div style="position: relative; height: 200px; background: #f8f9fa; border-radius: 8px; margin: 10px 0;">
+                    <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 1px; background: #dee2e6;"></div>
+                    <div style="position: absolute; bottom: 0; left: 0; width: 1px; height: 100%; background: #dee2e6;"></div>
+                    <!-- Data points -->
+                    <div style="position: absolute; bottom: 130px; left: 85%; width: 10px; height: 10px; 
+                                background: #dc3545; border-radius: 50%; transform: translate(-50%, 50%);"></div>
+                    <div style="position: absolute; bottom: 90px; left: 78%; width: 8px; height: 8px; 
+                                background: #fd7e14; border-radius: 50%; transform: translate(-50%, 50%);"></div>
+                    <div style="position: absolute; bottom: 50px; left: 72%; width: 6px; height: 6px; 
+                                background: #198754; border-radius: 50%; transform: translate(-50%, 50%);"></div>
+                    <!-- Labels -->
+                    <div style="position: absolute; bottom: 140px; left: 87%; font-size: 10px;">CAD</div>
+                    <div style="position: absolute; bottom: 100px; left: 80%; font-size: 10px;">Heart Attack</div>
+                    <div style="position: absolute; bottom: 60px; left: 74%; font-size: 10px;">Arrhythmia</div>
+                    <!-- Axes labels -->
+                    <div style="position: absolute; bottom: -20px; left: 50%; transform: translateX(-50%); font-size: 12px;">Confidence (%)</div>
+                    <div style="position: absolute; top: 50%; left: -30px; transform: rotate(-90deg) translateX(-50%); font-size: 12px;">Risk (%)</div>
+                </div>
+            </div>
+            '''
         },
         'detailed_analysis': [
             {
